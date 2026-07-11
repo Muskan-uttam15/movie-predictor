@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./recommender:/app/recommender
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - movie-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - movie-network
+
+networks:
+  movie-network:
+    driver: bridge
